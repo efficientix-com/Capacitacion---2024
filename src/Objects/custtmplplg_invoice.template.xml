@@ -1,0 +1,662 @@
+<?xml version="1.0"?><!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+<#setting locale = "es_MX">
+<#setting time_zone= "America/Mexico_City">
+<#setting number_format=",##0.00">
+<#assign "dataXML" = "">
+<#if custom?has_content>
+	<#if custom.dataXML?has_content>
+		<#assign "dataXML" = custom.dataXML>
+
+	</#if>
+	<#setting locale=custom.locale>
+	<#assign labels = custom.labels>
+	<#if custom.certData?has_content>
+	<#assign "certData" = custom.certData>
+	<#else>
+	<#assign "certData" = record>
+</#if>
+<#assign "satCodes" = custom.satcodes>
+
+<#if custom.multiCurrencyFeature == "true">
+<#assign "currencyCode" = record.currencysymbol>
+<#assign exchangeRate = record.exchangerate?string.number>
+<#else>
+<#assign "currencyCode" = "MXN">
+<#assign exchangeRate = 1>
+</#if>
+<#if custom.oneWorldFeature == "true">
+<#assign customCompanyInfo = record.subsidiary>
+<#else>
+<#assign "customCompanyInfo" = companyinformation>
+</#if>
+<#if customer.isperson == "T">
+<#assign customerName = customer.firstname + ' ' + customer.lastname>
+<#else>
+<#assign "customerName" = customer.companyname>
+</#if>
+<#assign "summary" = custom.summary>
+<#assign "totalAmount" = summary.subtotal - summary.totalDiscount>
+<#assign "companyTaxRegNumber" = custom.companyInfo.rfc>
+<#assign currencySymbolMap = {"USD":"$","CAD":"$","EUR":"€","AED":"د.إ.‏","AFN":"؋","ALL":"Lek","AMD":"դր.","ARS":"$","AUD":"$","AZN":"ман.","BAM":"KM","BDT":"৳","BGN":"лв.","BHD":"د.ب.‏","BIF":"FBu","BND":"$","BOB":"Bs","BRL":"R$","BWP":"P","BYR":"BYR","BZD":"$","CDF":"FrCD","CHF":"CHF","CLP":"$","CNY":"CN¥","COP":"$","CRC":"₡","CVE":"CV$","CZK":"Kč","DJF":"Fdj","DKK":"kr","DOP":"RD$","DZD":"د.ج.‏","EEK":"kr","EGP":"ج.م.‏","ERN":"Nfk","ETB":"Br","GBP":"£","GEL":"GEL","GHS":"GH₵","GNF":"FG","GTQ":"Q","HKD":"$","HNL":"L","HRK":"kn","HUF":"Ft","IDR":"Rp","ILS":"₪","INR":"টকা","IQD":"د.ع.‏","IRR":"﷼","ISK":"kr","JMD":"$","JOD":"د.أ.‏","JPY":"￥","KES":"Ksh","KHR":"៛","KMF":"FC","KRW":"₩","KWD":"د.ك.‏","KZT":"тңг.","LBP":"ل.ل.‏","LKR":"SL Re","LTL":"Lt","LVL":"Ls","LYD":"د.ل.‏","MAD":"د.م.‏","MDL":"MDL","MGA":"MGA","MKD":"MKD","MMK":"K","MOP":"MOP$","MUR":"MURs","MXN":"$","MYR":"RM","MZN":"MTn","NAD":"N$","NGN":"₦","NIO":"C$","NOK":"kr","NPR":"नेरू","NZD":"$","OMR":"ر.ع.‏","PAB":"B/.","PEN":"S/.","PHP":"₱","PKR":"₨","PLN":"zł","PYG":"₲","QAR":"ر.ق.‏","RON":"RON","RSD":"дин.","RUB":"руб.","RWF":"FR","SAR":"ر.س.‏","SDG":"SDG","SEK":"kr","SGD":"$","SOS":"Ssh","SYP":"ل.س.‏","THB":"฿","TND":"د.ت.‏","TOP":"T$","TRY":"TL","TTD":"$","TWD":"NT$","TZS":"TSh","UAH":"₴","UGX":"USh","UYU":"$","UZS":"UZS","VEF":"Bs.F.","VND":"₫","XAF":"FCFA","XOF":"CFA","YER":"ر.ي.‏","ZAR":"R","ZMK":"ZK"}>
+<#function fmtc value>
+<#assign dst =  currencySymbolMap[currencyCode] + value?number?string["0.00"]>
+<#return dst>
+</#function>
+</#if>
+<#assign infoEmpresa = record.subsidiary>
+<head>
+
+	<script>
+		function convierteHTML(){
+			const xmlString = new DOMParser();
+			const xmlDoc = parser.parserFromString(record.custbody_psg_ei_content, 'application/xml')
+			const variable='hola'
+			return variable;
+		}
+	</script>
+	<#--  <#assign dataXmlCustom2 = convierteHTML()?eval>  -->
+	<#assign dataXmlCustom2 =''>
+	<link name="NotoSans" type="font" subtype="truetype" src="${nsfont.NotoSans_Regular}" src-bold="${nsfont.NotoSans_Bold}" src-italic="${nsfont.NotoSans_Italic}" src-bolditalic="${nsfont.NotoSans_BoldItalic}" bytes="2" />
+	<#if .locale == "zh_CN">
+		<link name="NotoSansCJKsc" type="font" subtype="opentype" src="${nsfont.NotoSansCJKsc_Regular}" src-bold="${nsfont.NotoSansCJKsc_Bold}" bytes="2" />
+	<#elseif .locale == "zh_TW">
+		<link name="NotoSansCJKtc" type="font" subtype="opentype" src="${nsfont.NotoSansCJKtc_Regular}" src-bold="${nsfont.NotoSansCJKtc_Bold}" bytes="2" />
+	<#elseif .locale == "ja_JP">
+		<link name="NotoSansCJKjp" type="font" subtype="opentype" src="${nsfont.NotoSansCJKjp_Regular}" src-bold="${nsfont.NotoSansCJKjp_Bold}" bytes="2" />
+	<#elseif .locale == "ko_KR">
+		<link name="NotoSansCJKkr" type="font" subtype="opentype" src="${nsfont.NotoSansCJKkr_Regular}" src-bold="${nsfont.NotoSansCJKkr_Bold}" bytes="2" />
+	<#elseif .locale == "th_TH">
+		<link name="NotoSansThai" type="font" subtype="opentype" src="${nsfont.NotoSansThai_Regular}" src-bold="${nsfont.NotoSansThai_Bold}" bytes="2" />
+	</#if>
+    <macrolist>
+        <macro id="nlheader">
+        </macro>
+        <macro id="nlfooter">
+            <table class="footer" style='width:100%;'>
+				<tr>
+					<td align="left" colspan='5'>ESTE DOCUMENTO ES UNA REPRESENTACIÓN IMPRESA DE UN CFDI 4.0<br/> CFDI emitido por MySuite Services S.A. de C.V. Proveedor Autorizado de Certificación (P<br/>AC) 55270 www.mysuitemex.com</td>
+					<td align="left" colspan='2'></td>
+					<td align="right" colspan='2'>
+						<p>
+							<b>SERIE: </b>${record.custbody_mx_cfdi_serie}
+							<b>FOLIO: </b>${record.custbody_mx_cfdi_folio}
+						</p>
+						<p>Página <pagenumber/> de <totalpages/></p>
+					</td>
+				</tr>
+			</table>
+        </macro>
+    </macrolist>
+    <style type="text/css">* {
+		<#if .locale == "zh_CN">
+			font-family: NotoSans, NotoSansCJKsc, sans-serif;
+		<#elseif .locale == "zh_TW">
+			font-family: NotoSans, NotoSansCJKtc, sans-serif;
+		<#elseif .locale == "ja_JP">
+			font-family: NotoSans, NotoSansCJKjp, sans-serif;
+		<#elseif .locale == "ko_KR">
+			font-family: NotoSans, NotoSansCJKkr, sans-serif;
+		<#elseif .locale == "th_TH">
+			font-family: NotoSans, NotoSansThai, sans-serif;
+		<#else>
+			font-family: NotoSans, sans-serif;
+		</#if>
+		}
+		table {
+			font-size: 9pt;
+			table-layout: fixed;
+		}
+        th {
+            font-weight: bold;
+            font-size: 8pt;
+            vertical-align: middle;
+            padding: 5px 6px 3px;
+            background-color: #e3e3e3;
+            color: #333333;
+        }
+        td {
+            padding: 4px 6px;
+        }
+		td p { align:left }
+        b {
+            font-weight: bold;
+            color: #333333;
+        }
+		
+      	.imagenClase img{
+			height:70px;
+          	width:90px;
+		}
+        table.infopersonal td {
+            padding: 3px;
+            font-size: 10px;
+        }
+        table.header td {
+            padding: 0px;
+            font-size: 10pt;
+        }
+        table.footer td {
+            padding: 0px;
+            font-size: 7pt;
+        }
+        table.itemtable th {
+            padding-bottom: 3px;
+            padding-top: 3px;
+            padding-left: 2px;
+            padding-right: 2px;
+			font-size:8px;
+			background-color:#c5c6c8;
+        }
+        table.itemtable td {
+            padding-bottom: 3px;
+            padding-top: 3px;
+			padding-left: 2px;
+            padding-right: 2px;
+			font-size:8px;
+        }
+        table.body td {
+            padding-top: 2px;
+        }
+        table.total {
+            page-break-inside: avoid;
+        }
+        table.total td{
+            font-size: 9px;
+        }
+        table.total th{
+            font-size: 9px;
+        }
+        table.infoFiscal td{
+            font-size: 7px;
+        }
+        tr.totalrow {
+            background-color: #e3e3e3;
+            line-height: 200%;
+        }
+        td.totalboxtop {
+            font-size: 12pt;
+            background-color: #e3e3e3;
+        }
+        td.addressheader {
+            font-size: 8pt;
+            padding-top: 6px;
+            padding-bottom: 2px;
+        }
+        td.address {
+            padding-top: 0px;
+        }
+        td.totalboxmid {
+            font-size: 28pt;
+            padding-top: 20px;
+            background-color: #e3e3e3;
+        }
+        td.totalboxbot {
+            background-color: #e3e3e3;
+            font-weight: bold;
+        }
+        span.title {
+            font-size: 28pt;
+        }
+        span.number {
+            font-size: 16pt;
+        }
+        span.itemname {
+            font-weight: bold;
+            line-height: 150%;
+        }
+        hr {
+            width: 100%;
+            color: #d3d3d3;
+            background-color: #d3d3d3;
+            height: 1px;
+        }
+</style>
+</head>
+<body header="nlheader" header-height="0%" footer="nlfooter" footer-height="20pt" padding="0.5in 0.1in 0.5in 0.1in" size="Letter">
+	<#--  <div>${record.custbody_psg_ei_content}</div>  -->
+	<#assign dataXmlCustom = record.custbody_psg_ei_content>
+	<#--  <#assign dataXmlCustom1 = dataXmlCustom?eval>  -->
+	<#--  ${dataXmlCustom}  -->
+	<table class="header" style="width: 100%;">
+		<tr>
+			<td colspan='2' align='left'>
+			 <#if record.custbody_efx_fe_logosub?has_content>
+				<#assign "dominio" = "https://system.netsuite.com">
+				<#assign "urldir" = "https://system.netsuite.com"+record.custbody_efx_fe_logosub>
+					<#assign "urldirFormated" = urldir>
+				<img width="90" height="70" src="${urldirFormated}" />
+			<#else>
+				<div class="imagenClase">${subsidiary.logo}</div>
+			</#if>
+			</td>
+			<td colspan='3' align="left">
+				<span style='font-weight:bold; font-size: 12px;' >${subsidiary.name}</span><br />
+				<span style='font-weight:bold;' >A. PST200604PW2</span>
+				<br/><br/><br/>
+				<table>
+					<tr>
+						<td style='font-size:10px;' align='center'><strong>RÉGIMEN FISCAL:</strong> 
+							<#if dataXML?has_content>
+								${dataXML.Emisor.atributos.RegimenFiscal}
+							<#else>
+								Pendiente del timbrado
+							</#if>
+						</td>
+					</tr>
+					<tr>
+						<td style='font-size:10px;' align='center'><strong>LUGAR DE EXPEDICIÓN:</strong>
+						<#if dataXML?has_content>
+								${dataXML.atributos.LugarExpedicion}
+							<#else>
+								${record.custbody_efx_fe_lugar_expedicion}
+							</#if> 
+						</td>
+					</tr>
+					<tr>
+						<td style='font-size:10px;' align='center'><strong>FECHA Y HORA DE EXPEDICIÓN:</strong> ${record.trandate}</td>
+					</tr>
+					<tr>
+						<td style='font-size:10px;' align='center'><strong>SUCURSAL:</strong> Pendiente</td>
+					</tr>
+				</table>
+
+			</td>
+			<td colspan='4' align="right">
+				<table style="width: 100%; border:1px; border-color:#c5c6c8;">
+					<tr>
+						<td style='font-weight:bold; font-size:10px; padding-top: 2px; padding-bottom:2pm; border-bottom:1px; border-color:#c5c6c8; background-color:#c5c6c8;' align='center'>FACTURA </td>
+					</tr>
+					<tr>
+						<td style='padding-left:3px; font-size:10px; line-height:13px;' >
+							<strong>VERSIÓN: </strong>
+							<#if dataXML?has_content>
+								${dataXML.atributos.Version}
+							<#else>
+								Pendiente del timbrado
+							</#if>
+							<br/>
+							<strong>SERIE: </strong>${record.custbody_mx_cfdi_serie} <br/>
+							<strong>FOLIO: </strong>${record.custbody_mx_cfdi_folio} <br/>
+							<strong>FOLIO FISCAL: </strong>${record.custbody_mx_cfdi_uuid} <br/>
+							<strong>FECHA Y HORA DE CERTIFICACIÓN: </strong>${record.custbody_mx_cfdi_certify_timestamp} <br/>
+							<strong>FORMA DE PAGO: </strong>${record.custbody_mx_txn_sat_payment_method} <br/>
+							<strong>TIPO DE COMPROBANTE: </strong> 
+							<#if dataXML?has_content>
+								${dataXML.atributos.TipoDeComprobante}
+							<#else>
+								Pendiente del timbrado
+							</#if>
+							<br/>
+							<strong>MÉTODO DE PAGO: </strong>${record.custbody_mx_txn_sat_payment_term} <br/>
+							<strong>EXPORTACIÓN: </strong>${record.custbody_mx_cfdi_sat_export_type} <br/>
+							<strong>RÉGIMEN FISCAL: </strong>
+							<#if dataXML?has_content>
+								${dataXML.Emisor.atributos.RegimenFiscal}
+							<#else>
+								Pendiente del timbrado
+							</#if>
+							<br/>
+						</td>
+					</tr>
+				</table>
+
+			</td>
+		</tr>
+	</table>
+	<table class='infopersonal' style="width: 100%; margin-top: 20px; border:1px; border-color:#c5c6c8;">
+		<tr>
+			<td align='center' style='font-weight:bold; border-bottom:1px; border-color:#c5c6c8; background-color:#c5c6c8;'>CLIENTE</td>
+		</tr>
+		<tr>
+			<td><b>${record.entity}</b></td>
+		</tr>
+		<tr>
+			<td><b>R.F.C: </b>${record.custbody_mx_customer_rfc}</td>
+		</tr>
+		<tr>
+			<td><b>DOMICILIO FISCAL RECEPTOR: </b> ${record.billzip}</td>
+		</tr>
+		<tr>
+			<td><b>TAXID: </b>PENDIENTE</td>
+		</tr>
+		<tr>
+			<td><b>RESIDENCIA FISCAL: </b>${record.nexus_country}</td>
+		</tr>
+		<tr>
+			<td><b>DOMICILIO FISCAL: </b></td>
+		</tr>
+		<tr>
+			<#assign domFis = record.billaddress?replace("<br />"," ")>
+			<td>${domFis}</td>
+		</tr>
+		<tr>
+			<td><b>REGIMEN FISCAL: </b>
+			<#if dataXML?has_content>
+				${dataXML.Emisor.atributos.RegimenFiscal}
+			<#else>
+				Pendiente del timbrado
+			</#if>
+			</td>
+		</tr>
+		<tr>
+			<td><b>USO DE CFDI: </b>${record.custbody_mx_cfdi_usage}</td>
+		</tr>
+	</table>
+
+<#--  <table style="width: 100%; margin-top: 10px;"><tr>
+	<td class="addressheader" colspan="3"><b>${record.billaddress@label}</b></td>
+	<td class="addressheader" colspan="3"><b>${record.shipaddress@label}</b></td>
+	<td class="totalboxtop" colspan="5"><b>${record.total@label?upper_case}</b></td>
+	</tr>
+	<tr>
+	<td class="address" colspan="3" rowspan="2">${record.billaddress}</td>
+	<td class="address" colspan="3" rowspan="2">${record.shipaddress}</td>
+	<td align="right" class="totalboxmid" colspan="5">${record.total}</td>
+	</tr>
+	<tr>
+	<td align="right" class="totalboxbot" colspan="5"><b>${record.duedate@label}:</b> ${record.duedate}</td>
+	</tr></table>  
+-->
+
+<#--  <table class="body" style="width: 100%; margin-top: 10px;"><tr>
+	<th>${record.terms@label}</th>
+	<th>${record.duedate@label}</th>
+	<th>${record.otherrefnum@label}</th>
+	<th>${record.salesrep@label}</th>
+	<th>${record.shipmethod@label}</th>
+	<th>${record.partner@label}</th>
+	</tr>
+	<tr>
+	<td>${record.terms}</td>
+	<td>${record.duedate}</td>
+	<td>${record.otherrefnum}</td>
+	<td>${record.salesrep}</td>
+	<td>${record.shipmethod}</td>
+	<td>${record.partner}</td>
+	</tr></table>  
+-->
+<#if record.item?has_content>
+
+	<table class="itemtable" style="width: 100%; margin-top: 10px;"><!-- start items -->
+		<#list record.item as item>
+			<#if item_index==0>
+				<thead>
+					<tr>
+						<th align="center" colspan="2">
+							<p align="center" style='line-height:13px;'>CLAVE<br/>PROD/SERV.</p>
+						</th>
+						<th align="center" colspan="3">
+							<p align="center" style='line-height:13px;'>No.<br/>IDENTIFICACIÓN</p>
+						</th>
+						<th align="center" colspan="2">CANTIDAD</th>
+						<th align="center" colspan="3">
+							<p align="center" style='line-height:13px;'>CLAVE<br/>UNIDAD</p>
+						</th>
+						<th align="center" colspan="2">UNIDAD</th>
+						<th align="center" colspan="8">DESCRIPCIÓN</th>
+						<th align="center" colspan="2">
+							<p align="center" style='line-height:13px;'>OBJETO DE<br/> IMPUESTO</p>
+						</th>
+						<th align="center" colspan="2">
+							<p align="center" style='line-height:13px;'>VALOR<br/>UNITARIO</p>
+						</th>
+						<th align="center" colspan="2">IMPORTE</th>
+					</tr>
+				</thead>
+			</#if>
+			<tr style='border-bottom:1px; border-color:#c5c6c8;'>
+				<#assign claveprdser = item.custcol_mx_txn_line_sat_item_code?keep_before_last("-")>
+				<td align="center" colspan="2" style='border-left:1px; border-color:#c5c6c8;'>${claveprdser}</td>
+				<td align="center" colspan="3">${item.item}</td>
+				<td align="center" colspan="2">${item.quantity}</td>
+				<td align="center" colspan="2">
+					<#if dataXML?has_content>
+						<#list dataXML.Conceptos.Concepto as Concepto>
+							<#if item.item == Concepto.atributos.NoIdentificacion>
+								${Concepto.atributos.ClaveUnidad}
+							</#if>
+						</#list>
+					</#if>
+					</td>
+				<td align="center" colspan="3">${item.units}</td>
+				<td align="left" colspan="8">${item.description}</td>
+				<td align="center" colspan="2">${item.custcol_mx_txn_line_sat_tax_object}</td>
+				<td align="center" colspan="2">${item.rate}</td>
+				<td align="center" colspan="2" style='border-right:1px; border-color:#c5c6c8;'>${item.amount}</td>
+			</tr>
+			</#list><!-- end items -->
+	</table>
+	<#--  <hr />  -->
+</#if>
+<table class="total" style="width: 100%; margin-top: 10px;">
+	<tr>
+		<td align="left" colspan='2'>
+			<table class="total" style="width: 100%; margin-top: 10px;">
+				<tr>
+					<td align="left"><b>TOTAL EN LETRA:</b><br/>${record.custbody_efx_fe_total_text}</td>
+				</tr>
+				<tr></tr>
+				<tr>
+					<td align="left">
+						<b>MONEDA: </b>${record.currency}. <b>TIPO DE CAMBIO: ${record.exchangerate}</b> 
+					</td>
+				</tr>
+			</table>
+		</td>
+		<td align="right" colspan='2'></td>
+		<td align="right" colspan='2'>
+			<table class="total" style="width:100%;">
+				<tr>
+					<td align="right" colspan='3' style='border-top:1px; border-left:1px; border-right:1px; border-color:#c5c6c8;'><b>SUBTOTAL BRUTO</b></td>
+					<td align="right" colspan='2' style='border-top:1px; border-right:1px; border-color:#c5c6c8;'>${record.subtotal}</td>
+				</tr>
+				<tr>
+					<td align="right" colspan='3' style='border-left:1px; border-right:1px; border-color:#c5c6c8;'><b>SUBTOTAL</b></td>
+					<td align="right" colspan='2' style='border-right:1px; border-color:#c5c6c8;'>${record.subtotal}</td>
+				</tr>
+				<tr class="totalrow">
+					<td align="right" colspan='3' style='border:1px; border-color:#000000;'><b>${record.total@label}</b></td>
+					<td align="right" colspan='2' style='border-top:1px; border-right:1px; border-bottom:1px; border-color:#000000;'>${record.total}</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<pbr/>
+
+<table class='infoFiscal' style="width: 100%; border:1px; border-color:#c5c6c8;">
+	<tr>
+		<td colspan='1' rowspan='10'>
+			<barcode codetype="qrcode" showtext="false" width="90" height="90" value="${record.tranid}" />
+		</td>
+		<td colspan='9'></td>
+	</tr>
+	<tr>
+		<td colspan='1'></td>
+		<td colspan='9'><strong>NÚMERO DE SERIE DEL CERTIFICADO SAT: </strong>${record.custbody_mx_cfdi_sat_serial}</td>
+	</tr>
+	<tr>
+		<td colspan='1'></td>
+		<td colspan='9'><strong>NÚMERO DE SERIE DEL CSD DEL EMISOR: </strong>${record.custbody_mx_cfdi_issuer_serial}</td>
+	</tr>
+	<tr>
+		<td colspan='1'></td>
+		<td colspan='9'><strong>SELLO DIGITAL DEL SAT: </strong><br/>${record.custbody_mx_cfdi_sat_signature}</td>
+	</tr>
+	<tr>
+		<td colspan='1'></td>
+		<td colspan='9'><strong>SELLO DIGITAL DEL CFDI: </strong><br/>${record.custbody_mx_cfdi_signature}</td>
+	</tr>
+	<tr>
+		<td colspan='1'></td>
+		<td colspan='9'><strong>CADENA ORIGINAL : </strong><br/>${record.custbody_mx_cfdi_cadena_original}</td>
+	</tr>
+</table>  
+<#assign tieneComercioExterior = record.custbody_efx_fe_comercio_exterior>
+<#--  Complemento Comercio  -->
+<#if tieneComercioExterior>
+	<#assign direccionJSON = record.custbody_efx_fe_dirjson_emisor?eval>
+	<table class='infoFiscal' style="width: 100%; border:1px; border-color:#c5c6c8; margin-top: 20px;">
+		<tr>
+			<td colspan='5' align='center' style='margin:0px; border-left:1px; border-bottom:1px; border-color:#c5c6c8; background-color:#c5c6c8;'><b>COMPLEMENTO COMERCIO</b><br/></td>
+		</tr>
+		<tr style='border-bottom:1px; border-color:#c5c6c8;'>
+			<td colspan='1' align='center' style='line-height: 12px;'>
+				<p style='margin-bottom:3px;'><b>TIPO DE OPERACIÓN</b></p>
+				<p style='margin-top:0px;'>
+				<#if dataXML?has_content>
+					${dataXML.Complemento.ComercioExterior.atributos.TipoOperacion}
+				<#else>
+					Pendiente del timbrado
+				</#if>
+				</p>
+			</td>
+			<td colspan='1' align='center' style='line-height: 12px;'>
+				<p style='margin-bottom:3px;'><b>CLAVE PEDIMENTO</b></p>
+				<p style='margin-top:0px;'>
+				<#if dataXML?has_content>
+					${dataXML.Complemento.ComercioExterior.atributos.ClaveDePedimento}
+				<#else>
+					${record.custbody_efx_fe_ce_clavepedimento}
+				</#if>
+				</p>
+			</td>
+			<td colspan='1' align='center' style='line-height: 12px;'>
+				<p ><b>EXTERIOR 1.1 CERTIFICADO DE ORIGEN</b> 
+				<#if dataXML?has_content>
+					${dataXML.Complemento.ComercioExterior.atributos.CertificadoOrigen}
+				<#else>
+					Pendiente del timbrado
+				</#if>
+				</p>
+			</td>
+			<td colspan='2' align='center' style='line-height: 12px;'></td>
+		</tr>
+		<tr style='border-bottom:1px; border-color:#c5c6c8;'>
+			<td colspan='1' align='center' style='line-height: 12px;'>
+				<p style='margin-bottom:3px;'><b>INCORTERM</b></p>
+				<p style='margin-top:0px;'>
+				<#if dataXML?has_content>
+					${dataXML.Complemento.ComercioExterior.atributos.Incoterm}
+				<#else>
+					Pendiente del timbrado
+				</#if>
+				</p>
+			</td>
+			<td colspan='1' align='center' style='line-height: 12px;'>
+				<p style='margin-bottom:3px;'><b>SUBDIVISIÓN</b></p>
+				<p style='margin-top:0px;'>
+				<#if dataXML?has_content>
+					${dataXML.Complemento.ComercioExterior.atributos.Subdivision}
+				<#else>
+					Pendiente del timbrado
+				</#if>
+				</p>
+			</td>
+			<td colspan='1' align='center' style='line-height: 12px;'>
+				<p style='margin-bottom:3px;'><b>TIPO DE CAMBIO USD</b></p>
+				<p style='margin-top:0px;'>
+				<#if dataXML?has_content>
+					${dataXML.Complemento.ComercioExterior.atributos.TipoCambioUSD}
+				<#else>
+					${record.custbody_efx_fe_ce_exchage}
+				</#if>
+				</p>
+			</td>
+			<td colspan='1' align='center' style='line-height: 12px;'>
+				<p style='margin-bottom:3px;'><b>TOTAL USD</b></p>
+				<p style='margin-top:0px;'>
+				<#if dataXML?has_content>
+					${dataXML.Complemento.ComercioExterior.atributos.TotalUSD}
+				<#else>
+					${record.custbody_efx_fe_ce_totalusd}
+				</#if>
+				</p>
+			</td>
+			<td colspan='1' align='center' style='line-height: 12px;'></td>
+		</tr>
+		<tr>
+			<td colspan='5' style="padding:0px;">
+				<table class='infoFiscal' style="width: 100%; margin:0px; border:2px; border-color:white;"> 
+					<tr style='margin:0px; border-bottom:1px; border-color:#c5c6c8;'>
+						<td colspan='1' align='left' style='background-color:#c5c6c8; line-height: 12px; margin-bottom:2px'>
+							<p style='margin-bottom:3px;'><b>EMISOR</b></p>
+						</td>
+						<td colspan='3' align='left' style='line-height: 12px;'>
+							<p style='margin-bottom:3px;'></p>
+						</td>
+						<td colspan='7' align='left' style='line-height: 12px;'>
+							<p style='margin-bottom:3px;'><b>DOMICILIO: </b>
+							<#if dataXML?has_content>
+								${dataXML.Complemento.ComercioExterior.Emisor.Domicilio.atributos.Calle}
+							<#else>
+								${direccionJSON.emisor.Calle}
+							</#if>
+							</p>
+						</td>
+					</tr>
+					<tr >
+						<td colspan='1' align='left' style='background-color:#c5c6c8; line-height: 12px; margin-top:2px'>
+							<p style='margin-bottom:3px;'><b>RECEPTOR</b></p>
+						</td>
+						<td colspan='3' align='left' style='line-height: 12px;'>
+							<p style='margin-bottom:3px;'><b>NÚMERO DE IDENTIFICACIÓN: </b></p>
+						</td>
+						<td colspan='7' align='left' style='line-height: 12px;'>
+							<p style='margin-bottom:3px;'><b>DOMICILIO: </b>
+							<#if dataXML?has_content>
+								${dataXML.Complemento.ComercioExterior.Receptor.Domicilio.atributos.Calle}
+							<#else>
+								${direccionJSON.receptor.Calle}
+							</#if>
+							</p>
+						</td>
+					</tr>
+				</table>  
+			</td>
+		</tr>
+		<tr style='border-top:1px; border-color:#c5c6c8;'>
+			<td colspan='5' style="padding:0px;">
+				<table class='infoFiscal' style="width: 100%; margin:0px; border:2px; border-color:white;"> 
+					<tr style='margin:0px; border-bottom:1px; border-color:#c5c6c8;'>
+						<td colspan='13' align='center' style='background-color:#c5c6c8; line-height: 12px; padding:0px;'>
+							<p style=''><b>MERCANCIAS</b></p>
+						</td>
+					</tr>
+					<#list record.item as item>
+						<#assign claveprdserM = item.custcol_mx_txn_line_sat_item_code?keep_before_last("-")>
+						<tr style='border-bottom:1px; border-color:#c5c6c8;'>
+							<td colspan='3' align='center' style='line-height:3px;'>
+								<p style=''><b>NÚMERO DE IDENTIFICACIÓN</b></p>
+								<p style=''>${item.item}</p>
+							</td>
+							<td colspan='2' align='center' style='line-height:3px;'>
+								<p style=''><b>FRACCIÓN ARNCELARIA: </b></p>
+								<p style=''>${item.custcol_efx_fe_ce_farancel_code}</p>
+							</td>
+							<td colspan='2' align='center' style='line-height:3px;'>
+								<p style=''><b>CANTIDAD ADUANA: </b></p>
+								<p style=''>${item.quantity}</p>
+							</td>
+							<td colspan='2' align='center' style='line-height:3px;'>
+								<p style=''><b>UNIDAD ADUANA: </b></p>
+								<p style=''>${item.custcol_efx_fe_unit_code_ce}</p>
+							</td>
+							<td colspan='2' align='center' style='line-height:3px;'>
+								<p style=''><b>VALOR UNITARIO </b></p>
+								<p style=''><b>ADUANA </b>${item.rate}</p>
+							</td>
+							<td colspan='2' align='center' style='line-height:3px;'>
+								<p style=''><b>VALOR DOLARES: </b></p>
+								<p style=''>${item.amount}</p>
+							</td>
+						</tr>
+					</#list>
+				</table>  
+			</td>
+		</tr>
+	</table>
+</#if>  
+</body>
+</pdf>

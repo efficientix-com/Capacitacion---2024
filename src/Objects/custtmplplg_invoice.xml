@@ -1,0 +1,9 @@
+<advancedpdftemplate scriptid="custtmplplg_invoice" standard="STDTMPLCUSTINVC">
+  <description></description>
+  <displaysourcecode>F</displaysourcecode>
+  <isinactive>F</isinactive>
+  <preferred>T</preferred>
+  <printtype>TRANSACTION</printtype>
+  <title>*PLG Invoice PDF/HTML Template</title>
+  <trantype>CUSTINVC</trantype>
+</advancedpdftemplate>

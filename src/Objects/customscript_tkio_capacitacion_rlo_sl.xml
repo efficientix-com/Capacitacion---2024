@@ -1,0 +1,25 @@
+<suitelet scriptid="customscript_tkio_capacitacion_rlo_sl">
+  <description>Script usado para capacitacion 2024</description>
+  <isinactive>F</isinactive>
+  <name>TKIO - Suitelet Capacitacion RLO - SL</name>
+  <notifyadmins>F</notifyadmins>
+  <notifyemails></notifyemails>
+  <notifyowner>T</notifyowner>
+  <notifyuser>F</notifyuser>
+  <scriptfile>[/SuiteScripts/Tekiio/Actualizacion registros custom/ui/TKIO - Capacitacion Suitelet RLO - SL.js]</scriptfile>
+  <scriptdeployments>
+    <scriptdeployment scriptid="customdeploy_tkio_capacitacion_rlo_sl">
+      <allemployees>T</allemployees>
+      <allpartners>F</allpartners>
+      <allroles>T</allroles>
+      <audslctrole></audslctrole>
+      <eventtype></eventtype>
+      <isdeployed>T</isdeployed>
+      <isonline>F</isonline>
+      <loglevel>DEBUG</loglevel>
+      <runasrole>ADMINISTRATOR</runasrole>
+      <status>TESTING</status>
+      <title>TKIO - Suitelet Capacitacion RLO - SL</title>
+    </scriptdeployment>
+  </scriptdeployments>
+</suitelet>
