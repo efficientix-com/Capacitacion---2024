@@ -162,7 +162,7 @@
             page-break-inside: avoid;
         }
         table.total td{
-            font-size: 9px;
+            font-size: 9px
         }
         table.total th{
             font-size: 9px;
