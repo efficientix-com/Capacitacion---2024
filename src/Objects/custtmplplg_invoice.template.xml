@@ -165,7 +165,7 @@
             font-size: 9px
         }
         table.total th{
-            font-size: 9px;
+            font-size: 9px
         }
         table.infoFiscal td{
             font-size: 7px;
